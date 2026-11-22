@@ -1,0 +1,20 @@
+{
+  "comment": "按 (工单, 事件) 绑定设备。WO-Q 已隔离，其绑定被接受但忽略（不生成归属行）。",
+  "bindings": {
+    "WO-A": {
+      "e_cross": "PRS-01",
+      "e_before": "PRS-01",
+      "e_after": "PRS-01",
+      "e_noshift": "SPARE-9",
+      "e_noanchor": "PRS-01"
+    },
+    "WO-B": {
+      "e_conflict": "CLN-02",
+      "e_tie": "CLN-02",
+      "e_seq": "CLN-02"
+    },
+    "WO-Q": {
+      "q1": "PRS-01"
+    }
+  }
+}

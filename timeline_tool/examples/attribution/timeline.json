@@ -1,0 +1,35 @@
+{
+  "comment": "归属层演示用时间线：e_cross 跨 8000 交接班并跨过历史空档；e_before/e_after 精确落在交接端点上；e_noanchor 无任何证据；e_noshift 绑定到没有任何班次的设备；WO-Q 被隔离。",
+  "work_orders": [
+    {
+      "id": "WO-A",
+      "events": ["e_cross", "e_before", "e_after", "e_noshift", "e_noanchor"],
+      "absolute": [
+        {"id": "a1", "event": "e_cross", "lo": 15000, "hi": 21000, "source": "mes"},
+        {"id": "a2", "event": "e_before", "lo": 7999, "hi": 7999, "source": "mes"},
+        {"id": "a3", "event": "e_after", "lo": 8000, "hi": 8000, "source": "mes"},
+        {"id": "a4", "event": "e_noshift", "lo": 500, "hi": 600, "source": "mes"}
+      ],
+      "relative": []
+    },
+    {
+      "id": "WO-B",
+      "events": ["e_conflict", "e_tie", "e_seq"],
+      "absolute": [
+        {"id": "b1", "event": "e_conflict", "lo": 500, "hi": 500, "source": "mes"},
+        {"id": "b2", "event": "e_tie", "lo": 1500, "hi": 1500, "source": "mes"},
+        {"id": "b3", "event": "e_seq", "lo": 1500, "hi": 2500, "source": "mes"}
+      ],
+      "relative": []
+    },
+    {
+      "id": "WO-Q",
+      "events": ["q1"],
+      "absolute": [
+        {"id": "qbad", "event": "q1", "lo": 900, "hi": 100, "source": "mes"}
+      ],
+      "relative": []
+    }
+  ],
+  "queries": []
+}

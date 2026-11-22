@@ -1,0 +1,16 @@
+{
+  "comment": "初始班表：PRS-01 在 [16000,18000) 有历史空档；外协W 以高优先级分两段代班。CLN-02 含同优先级不同班组（冲突）与同班组并列（不算冲突）。",
+  "shifts": [
+    {"device": "PRS-01", "id": "DAY",     "team": "甲班",  "start_ms": 0,     "end_ms": 8000,  "priority": 0},
+    {"device": "PRS-01", "id": "EVE",     "team": "乙班",  "start_ms": 8000,  "end_ms": 16000, "priority": 0},
+    {"device": "PRS-01", "id": "LATE",    "team": "丙班",  "start_ms": 18000, "end_ms": 24000, "priority": 0},
+    {"device": "PRS-01", "id": "DELEG-1", "team": "外协W", "start_ms": 14000, "end_ms": 16500, "priority": 10},
+    {"device": "PRS-01", "id": "DELEG-2", "team": "外协W", "start_ms": 20000, "end_ms": 22000, "priority": 10},
+
+    {"device": "CLN-02", "id": "T1", "team": "甲组", "start_ms": 0,    "end_ms": 1000, "priority": 0},
+    {"device": "CLN-02", "id": "T2", "team": "乙组", "start_ms": 0,    "end_ms": 1000, "priority": 0},
+    {"device": "CLN-02", "id": "T3", "team": "甲组", "start_ms": 1000, "end_ms": 2000, "priority": 0},
+    {"device": "CLN-02", "id": "T4", "team": "甲组", "start_ms": 1000, "end_ms": 2000, "priority": 0},
+    {"device": "CLN-02", "id": "T5", "team": "丙组", "start_ms": 2000, "end_ms": 3000, "priority": 0}
+  ]
+}

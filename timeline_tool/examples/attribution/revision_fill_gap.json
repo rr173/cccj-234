@@ -1,0 +1,7 @@
+{
+  "note": "补上 [16000,18000) 的历史空档",
+  "shifts": [
+    {"action": "add", "device": "PRS-01", "id": "NIGHT", "team": "丁班",
+     "start_ms": 16000, "end_ms": 18000, "priority": 0}
+  ]
+}
