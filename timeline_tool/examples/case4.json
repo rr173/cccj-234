@@ -1,0 +1,44 @@
+{
+  "comment": "案例4：三类问题记录的区分，外加一个含合法自引用的正常工单。",
+  "work_orders": [
+    {
+      "id": "WO-4A",
+      "events": ["m"],
+      "absolute": [
+        {"id": "g1", "event": "ghost", "lo": 0, "hi": 10, "source": "mes"}
+      ],
+      "relative": []
+    },
+    {
+      "id": "WO-4B",
+      "events": ["m"],
+      "absolute": [
+        {"id": "v1", "event": "m", "lo": 900, "hi": 100, "source": "mes"}
+      ],
+      "relative": []
+    },
+    {
+      "id": "WO-4C",
+      "events": ["m"],
+      "absolute": [],
+      "relative": [
+        {"id": "s1", "before": "m", "after": "m", "lo": 3, "hi": 5, "source": "plc"}
+      ]
+    },
+    {
+      "id": "WO-4D",
+      "events": ["m", "n"],
+      "absolute": [
+        {"id": "b1", "event": "m", "lo": 10, "hi": 20, "source": "mes"}
+      ],
+      "relative": [
+        {"id": "s2", "before": "n", "after": "n", "lo": -2, "hi": 4, "source": "plc"},
+        {"id": "s3", "before": "m", "after": "n", "lo": 5, "hi": 8, "source": "plc"}
+      ]
+    }
+  ],
+  "queries": [
+    {"work_order": "WO-4A", "a": "m", "b": "m"},
+    {"work_order": "WO-4D", "a": "m", "b": "n"}
+  ]
+}

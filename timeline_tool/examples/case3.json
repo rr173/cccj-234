@@ -1,0 +1,18 @@
+{
+  "comment": "案例3：仅经环路才能发现的矛盾。三条相对证据两两各自合法，合起来要求 0 >= 3。工单应被隔离并给出负环证书。",
+  "work_orders": [
+    {
+      "id": "WO-3",
+      "events": ["e1", "e2", "e3"],
+      "absolute": [],
+      "relative": [
+        {"id": "c1", "before": "e1", "after": "e2", "lo": 1, "hi": 5, "source": "plc"},
+        {"id": "c2", "before": "e2", "after": "e3", "lo": 1, "hi": 5, "source": "andon"},
+        {"id": "c3", "before": "e3", "after": "e1", "lo": 1, "hi": 5, "source": "mes"}
+      ]
+    }
+  ],
+  "queries": [
+    {"work_order": "WO-3", "a": "e1", "b": "e2"}
+  ]
+}

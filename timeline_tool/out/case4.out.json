@@ -1,0 +1,192 @@
+{
+  "notes": [
+    "times are exact integer milliseconds",
+    "'@zero' is an artificial reference pinned to 0; absolute evidence is expressed against it",
+    "earliest/latest are null for events in components without an absolute anchor (undefined, never 0)",
+    "quarantine kinds: malformed_record / bad_reference / inverted_interval / infeasible"
+  ],
+  "work_orders": [
+    {
+      "id": "WO-4A",
+      "status": "quarantined",
+      "error_kind": "bad_reference",
+      "defects": [
+        {
+          "evidence": "g1",
+          "event": "ghost",
+          "source": "mes"
+        }
+      ]
+    },
+    {
+      "id": "WO-4B",
+      "status": "quarantined",
+      "error_kind": "inverted_interval",
+      "defects": [
+        {
+          "evidence": "v1",
+          "lo": 900,
+          "hi": 100,
+          "source": "mes"
+        }
+      ]
+    },
+    {
+      "id": "WO-4C",
+      "status": "quarantined",
+      "error_kind": "infeasible",
+      "contradiction": {
+        "type": "negative_cycle",
+        "cycle": [
+          "m",
+          "m"
+        ],
+        "steps": [
+          {
+            "from": "m",
+            "to": "m",
+            "weight": -3,
+            "meaning": "t_m - t_m <= -3",
+            "evidence": "s1",
+            "source": "plc",
+            "kind": "rel_lo"
+          }
+        ],
+        "total_weight": -3,
+        "derived": "summing the cycle constraints gives 0 <= -3, which is false; the listed evidence alone proves infeasibility"
+      }
+    },
+    {
+      "id": "WO-4D",
+      "status": "ok",
+      "components": [
+        {
+          "events": [
+            "m",
+            "n"
+          ],
+          "anchored": true
+        }
+      ],
+      "bounds": [
+        {
+          "event": "m",
+          "earliest": 10,
+          "latest": 20,
+          "latest_proof": {
+            "derived": "t_m <= 20",
+            "total_weight": 20,
+            "steps": [
+              {
+                "from": "@zero",
+                "to": "m",
+                "weight": 20,
+                "meaning": "t_m - t_@zero <= 20",
+                "evidence": "b1",
+                "source": "mes",
+                "kind": "abs_hi"
+              }
+            ]
+          },
+          "earliest_proof": {
+            "derived": "t_m >= 10",
+            "total_weight": -10,
+            "steps": [
+              {
+                "from": "m",
+                "to": "@zero",
+                "weight": -10,
+                "meaning": "t_@zero - t_m <= -10",
+                "evidence": "b1",
+                "source": "mes",
+                "kind": "abs_lo"
+              }
+            ]
+          }
+        },
+        {
+          "event": "n",
+          "earliest": 15,
+          "latest": 28,
+          "latest_proof": {
+            "derived": "t_n <= 28",
+            "total_weight": 28,
+            "steps": [
+              {
+                "from": "@zero",
+                "to": "m",
+                "weight": 20,
+                "meaning": "t_m - t_@zero <= 20",
+                "evidence": "b1",
+                "source": "mes",
+                "kind": "abs_hi"
+              },
+              {
+                "from": "m",
+                "to": "n",
+                "weight": 8,
+                "meaning": "t_n - t_m <= 8",
+                "evidence": "s3",
+                "source": "plc",
+                "kind": "rel_hi"
+              }
+            ]
+          },
+          "earliest_proof": {
+            "derived": "t_n >= 15",
+            "total_weight": -15,
+            "steps": [
+              {
+                "from": "n",
+                "to": "m",
+                "weight": -5,
+                "meaning": "t_m - t_n <= -5",
+                "evidence": "s3",
+                "source": "plc",
+                "kind": "rel_lo"
+              },
+              {
+                "from": "m",
+                "to": "@zero",
+                "weight": -10,
+                "meaning": "t_@zero - t_m <= -10",
+                "evidence": "b1",
+                "source": "mes",
+                "kind": "abs_lo"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "queries": [
+    {
+      "work_order": "WO-4A",
+      "a": "m",
+      "b": "m",
+      "error": "work_order_quarantined",
+      "error_kind": "bad_reference"
+    },
+    {
+      "work_order": "WO-4D",
+      "a": "m",
+      "b": "n",
+      "relations": {
+        "A<B": {
+          "possible": true,
+          "assignment": {
+            "m": 10,
+            "n": 15
+          }
+        },
+        "A=B": {
+          "possible": false
+        },
+        "A>B": {
+          "possible": false
+        }
+      }
+    }
+  ]
+}

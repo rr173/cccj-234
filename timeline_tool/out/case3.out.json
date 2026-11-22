@@ -1,0 +1,64 @@
+{
+  "notes": [
+    "times are exact integer milliseconds",
+    "'@zero' is an artificial reference pinned to 0; absolute evidence is expressed against it",
+    "earliest/latest are null for events in components without an absolute anchor (undefined, never 0)",
+    "quarantine kinds: malformed_record / bad_reference / inverted_interval / infeasible"
+  ],
+  "work_orders": [
+    {
+      "id": "WO-3",
+      "status": "quarantined",
+      "error_kind": "infeasible",
+      "contradiction": {
+        "type": "negative_cycle",
+        "cycle": [
+          "e1",
+          "e3",
+          "e2",
+          "e1"
+        ],
+        "steps": [
+          {
+            "from": "e1",
+            "to": "e3",
+            "weight": -1,
+            "meaning": "t_e3 - t_e1 <= -1",
+            "evidence": "c3",
+            "source": "mes",
+            "kind": "rel_lo"
+          },
+          {
+            "from": "e3",
+            "to": "e2",
+            "weight": -1,
+            "meaning": "t_e2 - t_e3 <= -1",
+            "evidence": "c2",
+            "source": "andon",
+            "kind": "rel_lo"
+          },
+          {
+            "from": "e2",
+            "to": "e1",
+            "weight": -1,
+            "meaning": "t_e1 - t_e2 <= -1",
+            "evidence": "c1",
+            "source": "plc",
+            "kind": "rel_lo"
+          }
+        ],
+        "total_weight": -3,
+        "derived": "summing the cycle constraints gives 0 <= -3, which is false; the listed evidence alone proves infeasibility"
+      }
+    }
+  ],
+  "queries": [
+    {
+      "work_order": "WO-3",
+      "a": "e1",
+      "b": "e2",
+      "error": "work_order_quarantined",
+      "error_kind": "infeasible"
+    }
+  ]
+}

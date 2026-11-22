@@ -1,0 +1,21 @@
+{
+  "comment": "案例1：x、y 各自的绝对区间都很宽 [0,10000]，但共享锚 s 的间接延迟已决定先后。查询 (x,y) 应只有 A<B 存在。",
+  "work_orders": [
+    {
+      "id": "WO-1",
+      "events": ["s", "x", "y"],
+      "absolute": [
+        {"id": "a1", "event": "s", "lo": 1000, "hi": 1000, "source": "mes"},
+        {"id": "a2", "event": "x", "lo": 0, "hi": 10000, "source": "mes"},
+        {"id": "a3", "event": "y", "lo": 0, "hi": 10000, "source": "mes"}
+      ],
+      "relative": [
+        {"id": "r1", "before": "s", "after": "x", "lo": 50, "hi": 200, "source": "plc"},
+        {"id": "r2", "before": "s", "after": "y", "lo": 800, "hi": 950, "source": "plc"}
+      ]
+    }
+  ],
+  "queries": [
+    {"work_order": "WO-1", "a": "x", "b": "y"}
+  ]
+}

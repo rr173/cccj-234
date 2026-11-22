@@ -1,0 +1,563 @@
+{
+  "notes": [
+    "times are exact integer milliseconds",
+    "'@zero' is an artificial reference pinned to 0; absolute evidence is expressed against it",
+    "earliest/latest are null for events in components without an absolute anchor (undefined, never 0)",
+    "quarantine kinds: malformed_record / bad_reference / inverted_interval / infeasible"
+  ],
+  "work_orders": [
+    {
+      "id": "WO-5",
+      "status": "ok",
+      "components": [
+        {
+          "events": [
+            "s",
+            "x",
+            "y"
+          ],
+          "anchored": true
+        }
+      ],
+      "bounds": [
+        {
+          "event": "s",
+          "earliest": 2,
+          "latest": 2,
+          "latest_proof": {
+            "derived": "t_s <= 2",
+            "total_weight": 2,
+            "steps": [
+              {
+                "from": "@zero",
+                "to": "s",
+                "weight": 2,
+                "meaning": "t_s - t_@zero <= 2",
+                "evidence": "a1",
+                "source": "mes",
+                "kind": "abs_hi"
+              }
+            ]
+          },
+          "earliest_proof": {
+            "derived": "t_s >= 2",
+            "total_weight": -2,
+            "steps": [
+              {
+                "from": "s",
+                "to": "@zero",
+                "weight": -2,
+                "meaning": "t_@zero - t_s <= -2",
+                "evidence": "a1",
+                "source": "mes",
+                "kind": "abs_lo"
+              }
+            ]
+          }
+        },
+        {
+          "event": "x",
+          "earliest": 2,
+          "latest": 3,
+          "latest_proof": {
+            "derived": "t_x <= 3",
+            "total_weight": 3,
+            "steps": [
+              {
+                "from": "@zero",
+                "to": "s",
+                "weight": 2,
+                "meaning": "t_s - t_@zero <= 2",
+                "evidence": "a1",
+                "source": "mes",
+                "kind": "abs_hi"
+              },
+              {
+                "from": "s",
+                "to": "x",
+                "weight": 1,
+                "meaning": "t_x - t_s <= 1",
+                "evidence": "r1",
+                "source": "plc",
+                "kind": "rel_hi"
+              }
+            ]
+          },
+          "earliest_proof": {
+            "derived": "t_x >= 2",
+            "total_weight": -2,
+            "steps": [
+              {
+                "from": "x",
+                "to": "s",
+                "weight": 0,
+                "meaning": "t_s - t_x <= 0",
+                "evidence": "r1",
+                "source": "plc",
+                "kind": "rel_lo"
+              },
+              {
+                "from": "s",
+                "to": "@zero",
+                "weight": -2,
+                "meaning": "t_@zero - t_s <= -2",
+                "evidence": "a1",
+                "source": "mes",
+                "kind": "abs_lo"
+              }
+            ]
+          }
+        },
+        {
+          "event": "y",
+          "earliest": 4,
+          "latest": 5,
+          "latest_proof": {
+            "derived": "t_y <= 5",
+            "total_weight": 5,
+            "steps": [
+              {
+                "from": "@zero",
+                "to": "s",
+                "weight": 2,
+                "meaning": "t_s - t_@zero <= 2",
+                "evidence": "a1",
+                "source": "mes",
+                "kind": "abs_hi"
+              },
+              {
+                "from": "s",
+                "to": "y",
+                "weight": 3,
+                "meaning": "t_y - t_s <= 3",
+                "evidence": "r2",
+                "source": "plc",
+                "kind": "rel_hi"
+              }
+            ]
+          },
+          "earliest_proof": {
+            "derived": "t_y >= 4",
+            "total_weight": -4,
+            "steps": [
+              {
+                "from": "y",
+                "to": "s",
+                "weight": -2,
+                "meaning": "t_s - t_y <= -2",
+                "evidence": "r2",
+                "source": "plc",
+                "kind": "rel_lo"
+              },
+              {
+                "from": "s",
+                "to": "@zero",
+                "weight": -2,
+                "meaning": "t_@zero - t_s <= -2",
+                "evidence": "a1",
+                "source": "mes",
+                "kind": "abs_lo"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "WO-6",
+      "status": "ok",
+      "components": [
+        {
+          "events": [
+            "a"
+          ],
+          "anchored": true
+        },
+        {
+          "events": [
+            "p",
+            "q"
+          ],
+          "anchored": false
+        },
+        {
+          "events": [
+            "z"
+          ],
+          "anchored": false
+        }
+      ],
+      "bounds": [
+        {
+          "event": "a",
+          "earliest": 0,
+          "latest": 4,
+          "latest_proof": {
+            "derived": "t_a <= 4",
+            "total_weight": 4,
+            "steps": [
+              {
+                "from": "@zero",
+                "to": "a",
+                "weight": 4,
+                "meaning": "t_a - t_@zero <= 4",
+                "evidence": "k1",
+                "source": "mes",
+                "kind": "abs_hi"
+              }
+            ]
+          },
+          "earliest_proof": {
+            "derived": "t_a >= 0",
+            "total_weight": 0,
+            "steps": [
+              {
+                "from": "a",
+                "to": "@zero",
+                "weight": 0,
+                "meaning": "t_@zero - t_a <= 0",
+                "evidence": "k1",
+                "source": "mes",
+                "kind": "abs_lo"
+              }
+            ]
+          }
+        },
+        {
+          "event": "p",
+          "earliest": null,
+          "latest": null,
+          "note": "anchorless component: absolute bounds undefined (null, not 0); only relative order is constrained"
+        },
+        {
+          "event": "q",
+          "earliest": null,
+          "latest": null,
+          "note": "anchorless component: absolute bounds undefined (null, not 0); only relative order is constrained"
+        },
+        {
+          "event": "z",
+          "earliest": null,
+          "latest": null,
+          "note": "anchorless component: absolute bounds undefined (null, not 0); only relative order is constrained"
+        }
+      ]
+    },
+    {
+      "id": "WO-7",
+      "status": "quarantined",
+      "error_kind": "infeasible",
+      "contradiction": {
+        "type": "negative_cycle",
+        "cycle": [
+          "e1",
+          "e2",
+          "e1"
+        ],
+        "steps": [
+          {
+            "from": "e1",
+            "to": "e2",
+            "weight": -1,
+            "meaning": "t_e2 - t_e1 <= -1",
+            "evidence": "c2",
+            "source": "andon",
+            "kind": "rel_lo"
+          },
+          {
+            "from": "e2",
+            "to": "e1",
+            "weight": -1,
+            "meaning": "t_e1 - t_e2 <= -1",
+            "evidence": "c1",
+            "source": "plc",
+            "kind": "rel_lo"
+          }
+        ],
+        "total_weight": -2,
+        "derived": "summing the cycle constraints gives 0 <= -2, which is false; the listed evidence alone proves infeasibility"
+      }
+    },
+    {
+      "id": "WO-8",
+      "status": "ok",
+      "components": [
+        {
+          "events": [
+            "m",
+            "n"
+          ],
+          "anchored": true
+        }
+      ],
+      "bounds": [
+        {
+          "event": "m",
+          "earliest": 1,
+          "latest": 4,
+          "latest_proof": {
+            "derived": "t_m <= 4",
+            "total_weight": 4,
+            "steps": [
+              {
+                "from": "@zero",
+                "to": "m",
+                "weight": 4,
+                "meaning": "t_m - t_@zero <= 4",
+                "evidence": "b1",
+                "source": "mes",
+                "kind": "abs_hi"
+              }
+            ]
+          },
+          "earliest_proof": {
+            "derived": "t_m >= 1",
+            "total_weight": -1,
+            "steps": [
+              {
+                "from": "m",
+                "to": "@zero",
+                "weight": -1,
+                "meaning": "t_@zero - t_m <= -1",
+                "evidence": "b1",
+                "source": "mes",
+                "kind": "abs_lo"
+              }
+            ]
+          }
+        },
+        {
+          "event": "n",
+          "earliest": 3,
+          "latest": 9,
+          "latest_proof": {
+            "derived": "t_n <= 9",
+            "total_weight": 9,
+            "steps": [
+              {
+                "from": "@zero",
+                "to": "m",
+                "weight": 4,
+                "meaning": "t_m - t_@zero <= 4",
+                "evidence": "b1",
+                "source": "mes",
+                "kind": "abs_hi"
+              },
+              {
+                "from": "m",
+                "to": "n",
+                "weight": 5,
+                "meaning": "t_n - t_m <= 5",
+                "evidence": "s3",
+                "source": "andon",
+                "kind": "rel_hi"
+              }
+            ]
+          },
+          "earliest_proof": {
+            "derived": "t_n >= 3",
+            "total_weight": -3,
+            "steps": [
+              {
+                "from": "n",
+                "to": "m",
+                "weight": -2,
+                "meaning": "t_m - t_n <= -2",
+                "evidence": "s3",
+                "source": "andon",
+                "kind": "rel_lo"
+              },
+              {
+                "from": "m",
+                "to": "@zero",
+                "weight": -1,
+                "meaning": "t_@zero - t_m <= -1",
+                "evidence": "b1",
+                "source": "mes",
+                "kind": "abs_lo"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "queries": [
+    {
+      "work_order": "WO-5",
+      "a": "x",
+      "b": "y",
+      "relations": {
+        "A<B": {
+          "possible": true,
+          "assignment": {
+            "s": 2,
+            "x": 3,
+            "y": 4
+          }
+        },
+        "A=B": {
+          "possible": false
+        },
+        "A>B": {
+          "possible": false
+        }
+      }
+    },
+    {
+      "work_order": "WO-6",
+      "a": "p",
+      "b": "q",
+      "relations": {
+        "A<B": {
+          "possible": true,
+          "assignment": {
+            "a": 0,
+            "p": -1,
+            "q": 0,
+            "z": 0
+          }
+        },
+        "A=B": {
+          "possible": false
+        },
+        "A>B": {
+          "possible": false
+        }
+      },
+      "note": "events ['p', 'q', 'z'] have no absolute anchor: their assigned absolute values are one valid shift; only differences are constrained"
+    },
+    {
+      "work_order": "WO-6",
+      "a": "a",
+      "b": "p",
+      "relations": {
+        "A<B": {
+          "possible": true,
+          "assignment": {
+            "a": 0,
+            "p": 1,
+            "q": 2,
+            "z": 2
+          }
+        },
+        "A=B": {
+          "possible": true,
+          "assignment": {
+            "a": 0,
+            "p": 0,
+            "q": 1,
+            "z": 1
+          }
+        },
+        "A>B": {
+          "possible": true,
+          "assignment": {
+            "a": 0,
+            "p": -1,
+            "q": 0,
+            "z": 0
+          }
+        }
+      },
+      "note": "events ['p', 'q', 'z'] have no absolute anchor: their assigned absolute values are one valid shift; only differences are constrained"
+    },
+    {
+      "work_order": "WO-6",
+      "a": "a",
+      "b": "z",
+      "relations": {
+        "A<B": {
+          "possible": true,
+          "assignment": {
+            "a": 0,
+            "p": 0,
+            "q": 1,
+            "z": 1
+          }
+        },
+        "A=B": {
+          "possible": true,
+          "assignment": {
+            "a": 0,
+            "p": -1,
+            "q": 0,
+            "z": 0
+          }
+        },
+        "A>B": {
+          "possible": true,
+          "assignment": {
+            "a": 0,
+            "p": -1,
+            "q": 0,
+            "z": -1
+          }
+        }
+      },
+      "note": "events ['p', 'q', 'z'] have no absolute anchor: their assigned absolute values are one valid shift; only differences are constrained"
+    },
+    {
+      "work_order": "WO-6",
+      "a": "p",
+      "b": "z",
+      "relations": {
+        "A<B": {
+          "possible": true,
+          "assignment": {
+            "a": 0,
+            "p": -1,
+            "q": 0,
+            "z": 0
+          }
+        },
+        "A=B": {
+          "possible": true,
+          "assignment": {
+            "a": 0,
+            "p": -1,
+            "q": 0,
+            "z": -1
+          }
+        },
+        "A>B": {
+          "possible": true,
+          "assignment": {
+            "a": 0,
+            "p": -1,
+            "q": 0,
+            "z": -2
+          }
+        }
+      },
+      "note": "events ['p', 'q', 'z'] have no absolute anchor: their assigned absolute values are one valid shift; only differences are constrained"
+    },
+    {
+      "work_order": "WO-7",
+      "a": "e1",
+      "b": "e2",
+      "error": "work_order_quarantined",
+      "error_kind": "infeasible"
+    },
+    {
+      "work_order": "WO-8",
+      "a": "m",
+      "b": "n",
+      "relations": {
+        "A<B": {
+          "possible": true,
+          "assignment": {
+            "m": 1,
+            "n": 3
+          }
+        },
+        "A=B": {
+          "possible": false
+        },
+        "A>B": {
+          "possible": false
+        }
+      }
+    }
+  ]
+}

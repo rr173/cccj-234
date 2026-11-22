@@ -1,0 +1,20 @@
+{
+  "comment": "案例1b：与案例1相同，但撤掉了证据 r2（s->y 的延迟）。重跑后 (x,y) 的关系候选应从 {A<B} 变为三种都可能。",
+  "work_orders": [
+    {
+      "id": "WO-1",
+      "events": ["s", "x", "y"],
+      "absolute": [
+        {"id": "a1", "event": "s", "lo": 1000, "hi": 1000, "source": "mes"},
+        {"id": "a2", "event": "x", "lo": 0, "hi": 10000, "source": "mes"},
+        {"id": "a3", "event": "y", "lo": 0, "hi": 10000, "source": "mes"}
+      ],
+      "relative": [
+        {"id": "r1", "before": "s", "after": "x", "lo": 50, "hi": 200, "source": "plc"}
+      ]
+    }
+  ],
+  "queries": [
+    {"work_order": "WO-1", "a": "x", "b": "y"}
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "comment": "案例5：小整数窗口，供 verify_enum.py 全枚举独立核对。WO-5 是案例1 的缩小版；WO-6 含无锚片/孤立事件/跨分量查询；WO-7 是双事件环路矛盾；WO-8 含合法自引用与同对事件多条证据（不互相覆盖，必须同时成立）。",
+  "work_orders": [
+    {
+      "id": "WO-5",
+      "events": ["s", "x", "y"],
+      "absolute": [
+        {"id": "a1", "event": "s", "lo": 2, "hi": 2, "source": "mes"},
+        {"id": "a2", "event": "x", "lo": 0, "hi": 9, "source": "mes"},
+        {"id": "a3", "event": "y", "lo": 0, "hi": 9, "source": "mes"}
+      ],
+      "relative": [
+        {"id": "r1", "before": "s", "after": "x", "lo": 0, "hi": 1, "source": "plc"},
+        {"id": "r2", "before": "s", "after": "y", "lo": 2, "hi": 3, "source": "plc"}
+      ]
+    },
+    {
+      "id": "WO-6",
+      "events": ["a", "p", "q", "z"],
+      "absolute": [
+        {"id": "k1", "event": "a", "lo": 0, "hi": 4, "source": "mes"}
+      ],
+      "relative": [
+        {"id": "d1", "before": "p", "after": "q", "lo": 1, "hi": 2, "source": "plc"}
+      ]
+    },
+    {
+      "id": "WO-7",
+      "events": ["e1", "e2"],
+      "absolute": [],
+      "relative": [
+        {"id": "c1", "before": "e1", "after": "e2", "lo": 1, "hi": 2, "source": "plc"},
+        {"id": "c2", "before": "e2", "after": "e1", "lo": 1, "hi": 2, "source": "andon"}
+      ]
+    },
+    {
+      "id": "WO-8",
+      "events": ["m", "n"],
+      "absolute": [
+        {"id": "b1", "event": "m", "lo": 1, "hi": 4, "source": "mes"}
+      ],
+      "relative": [
+        {"id": "s1", "before": "n", "after": "n", "lo": -1, "hi": 1, "source": "plc"},
+        {"id": "s2", "before": "m", "after": "n", "lo": 0, "hi": 9, "source": "plc"},
+        {"id": "s3", "before": "m", "after": "n", "lo": 2, "hi": 5, "source": "andon"}
+      ]
+    }
+  ],
+  "queries": [
+    {"work_order": "WO-5", "a": "x", "b": "y"},
+    {"work_order": "WO-6", "a": "p", "b": "q"},
+    {"work_order": "WO-6", "a": "a", "b": "p"},
+    {"work_order": "WO-6", "a": "a", "b": "z"},
+    {"work_order": "WO-6", "a": "p", "b": "z"},
+    {"work_order": "WO-7", "a": "e1", "b": "e2"},
+    {"work_order": "WO-8", "a": "m", "b": "n"}
+  ]
+}

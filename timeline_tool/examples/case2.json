@@ -1,0 +1,21 @@
+{
+  "comment": "案例2：无锚分量与跨分量比较。a 有绝对锚；p、q 只有相对延迟（无锚片，上下界必须为 null）；z 无任何证据。(p,q) 只有 A<B；跨分量对 (a,p)、(a,z)、(p,z) 三种关系都应存在。",
+  "work_orders": [
+    {
+      "id": "WO-2",
+      "events": ["a", "p", "q", "z"],
+      "absolute": [
+        {"id": "k1", "event": "a", "lo": 100, "hi": 200, "source": "mes"}
+      ],
+      "relative": [
+        {"id": "d1", "before": "p", "after": "q", "lo": 5, "hi": 10, "source": "plc"}
+      ]
+    }
+  ],
+  "queries": [
+    {"work_order": "WO-2", "a": "p", "b": "q"},
+    {"work_order": "WO-2", "a": "a", "b": "p"},
+    {"work_order": "WO-2", "a": "a", "b": "z"},
+    {"work_order": "WO-2", "a": "p", "b": "z"}
+  ]
+}

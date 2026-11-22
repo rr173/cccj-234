@@ -1,0 +1,220 @@
+{
+  "notes": [
+    "times are exact integer milliseconds",
+    "'@zero' is an artificial reference pinned to 0; absolute evidence is expressed against it",
+    "earliest/latest are null for events in components without an absolute anchor (undefined, never 0)",
+    "quarantine kinds: malformed_record / bad_reference / inverted_interval / infeasible"
+  ],
+  "work_orders": [
+    {
+      "id": "WO-2",
+      "status": "ok",
+      "components": [
+        {
+          "events": [
+            "a"
+          ],
+          "anchored": true
+        },
+        {
+          "events": [
+            "p",
+            "q"
+          ],
+          "anchored": false
+        },
+        {
+          "events": [
+            "z"
+          ],
+          "anchored": false
+        }
+      ],
+      "bounds": [
+        {
+          "event": "a",
+          "earliest": 100,
+          "latest": 200,
+          "latest_proof": {
+            "derived": "t_a <= 200",
+            "total_weight": 200,
+            "steps": [
+              {
+                "from": "@zero",
+                "to": "a",
+                "weight": 200,
+                "meaning": "t_a - t_@zero <= 200",
+                "evidence": "k1",
+                "source": "mes",
+                "kind": "abs_hi"
+              }
+            ]
+          },
+          "earliest_proof": {
+            "derived": "t_a >= 100",
+            "total_weight": -100,
+            "steps": [
+              {
+                "from": "a",
+                "to": "@zero",
+                "weight": -100,
+                "meaning": "t_@zero - t_a <= -100",
+                "evidence": "k1",
+                "source": "mes",
+                "kind": "abs_lo"
+              }
+            ]
+          }
+        },
+        {
+          "event": "p",
+          "earliest": null,
+          "latest": null,
+          "note": "anchorless component: absolute bounds undefined (null, not 0); only relative order is constrained"
+        },
+        {
+          "event": "q",
+          "earliest": null,
+          "latest": null,
+          "note": "anchorless component: absolute bounds undefined (null, not 0); only relative order is constrained"
+        },
+        {
+          "event": "z",
+          "earliest": null,
+          "latest": null,
+          "note": "anchorless component: absolute bounds undefined (null, not 0); only relative order is constrained"
+        }
+      ]
+    }
+  ],
+  "queries": [
+    {
+      "work_order": "WO-2",
+      "a": "p",
+      "b": "q",
+      "relations": {
+        "A<B": {
+          "possible": true,
+          "assignment": {
+            "a": 100,
+            "p": 95,
+            "q": 100,
+            "z": 100
+          }
+        },
+        "A=B": {
+          "possible": false
+        },
+        "A>B": {
+          "possible": false
+        }
+      },
+      "note": "events ['p', 'q', 'z'] have no absolute anchor: their assigned absolute values are one valid shift; only differences are constrained"
+    },
+    {
+      "work_order": "WO-2",
+      "a": "a",
+      "b": "p",
+      "relations": {
+        "A<B": {
+          "possible": true,
+          "assignment": {
+            "a": 100,
+            "p": 101,
+            "q": 106,
+            "z": 106
+          }
+        },
+        "A=B": {
+          "possible": true,
+          "assignment": {
+            "a": 100,
+            "p": 100,
+            "q": 105,
+            "z": 105
+          }
+        },
+        "A>B": {
+          "possible": true,
+          "assignment": {
+            "a": 100,
+            "p": 95,
+            "q": 100,
+            "z": 100
+          }
+        }
+      },
+      "note": "events ['p', 'q', 'z'] have no absolute anchor: their assigned absolute values are one valid shift; only differences are constrained"
+    },
+    {
+      "work_order": "WO-2",
+      "a": "a",
+      "b": "z",
+      "relations": {
+        "A<B": {
+          "possible": true,
+          "assignment": {
+            "a": 100,
+            "p": 96,
+            "q": 101,
+            "z": 101
+          }
+        },
+        "A=B": {
+          "possible": true,
+          "assignment": {
+            "a": 100,
+            "p": 95,
+            "q": 100,
+            "z": 100
+          }
+        },
+        "A>B": {
+          "possible": true,
+          "assignment": {
+            "a": 100,
+            "p": 95,
+            "q": 100,
+            "z": 99
+          }
+        }
+      },
+      "note": "events ['p', 'q', 'z'] have no absolute anchor: their assigned absolute values are one valid shift; only differences are constrained"
+    },
+    {
+      "work_order": "WO-2",
+      "a": "p",
+      "b": "z",
+      "relations": {
+        "A<B": {
+          "possible": true,
+          "assignment": {
+            "a": 100,
+            "p": 95,
+            "q": 100,
+            "z": 100
+          }
+        },
+        "A=B": {
+          "possible": true,
+          "assignment": {
+            "a": 100,
+            "p": 95,
+            "q": 100,
+            "z": 95
+          }
+        },
+        "A>B": {
+          "possible": true,
+          "assignment": {
+            "a": 100,
+            "p": 95,
+            "q": 100,
+            "z": 94
+          }
+        }
+      },
+      "note": "events ['p', 'q', 'z'] have no absolute anchor: their assigned absolute values are one valid shift; only differences are constrained"
+    }
+  ]
+}

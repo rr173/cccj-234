@@ -1,0 +1,187 @@
+{
+  "notes": [
+    "times are exact integer milliseconds",
+    "'@zero' is an artificial reference pinned to 0; absolute evidence is expressed against it",
+    "earliest/latest are null for events in components without an absolute anchor (undefined, never 0)",
+    "quarantine kinds: malformed_record / bad_reference / inverted_interval / infeasible"
+  ],
+  "work_orders": [
+    {
+      "id": "WO-1",
+      "status": "ok",
+      "components": [
+        {
+          "events": [
+            "s",
+            "x"
+          ],
+          "anchored": true
+        },
+        {
+          "events": [
+            "y"
+          ],
+          "anchored": true
+        }
+      ],
+      "bounds": [
+        {
+          "event": "s",
+          "earliest": 1000,
+          "latest": 1000,
+          "latest_proof": {
+            "derived": "t_s <= 1000",
+            "total_weight": 1000,
+            "steps": [
+              {
+                "from": "@zero",
+                "to": "s",
+                "weight": 1000,
+                "meaning": "t_s - t_@zero <= 1000",
+                "evidence": "a1",
+                "source": "mes",
+                "kind": "abs_hi"
+              }
+            ]
+          },
+          "earliest_proof": {
+            "derived": "t_s >= 1000",
+            "total_weight": -1000,
+            "steps": [
+              {
+                "from": "s",
+                "to": "@zero",
+                "weight": -1000,
+                "meaning": "t_@zero - t_s <= -1000",
+                "evidence": "a1",
+                "source": "mes",
+                "kind": "abs_lo"
+              }
+            ]
+          }
+        },
+        {
+          "event": "x",
+          "earliest": 1050,
+          "latest": 1200,
+          "latest_proof": {
+            "derived": "t_x <= 1200",
+            "total_weight": 1200,
+            "steps": [
+              {
+                "from": "@zero",
+                "to": "s",
+                "weight": 1000,
+                "meaning": "t_s - t_@zero <= 1000",
+                "evidence": "a1",
+                "source": "mes",
+                "kind": "abs_hi"
+              },
+              {
+                "from": "s",
+                "to": "x",
+                "weight": 200,
+                "meaning": "t_x - t_s <= 200",
+                "evidence": "r1",
+                "source": "plc",
+                "kind": "rel_hi"
+              }
+            ]
+          },
+          "earliest_proof": {
+            "derived": "t_x >= 1050",
+            "total_weight": -1050,
+            "steps": [
+              {
+                "from": "x",
+                "to": "s",
+                "weight": -50,
+                "meaning": "t_s - t_x <= -50",
+                "evidence": "r1",
+                "source": "plc",
+                "kind": "rel_lo"
+              },
+              {
+                "from": "s",
+                "to": "@zero",
+                "weight": -1000,
+                "meaning": "t_@zero - t_s <= -1000",
+                "evidence": "a1",
+                "source": "mes",
+                "kind": "abs_lo"
+              }
+            ]
+          }
+        },
+        {
+          "event": "y",
+          "earliest": 0,
+          "latest": 10000,
+          "latest_proof": {
+            "derived": "t_y <= 10000",
+            "total_weight": 10000,
+            "steps": [
+              {
+                "from": "@zero",
+                "to": "y",
+                "weight": 10000,
+                "meaning": "t_y - t_@zero <= 10000",
+                "evidence": "a3",
+                "source": "mes",
+                "kind": "abs_hi"
+              }
+            ]
+          },
+          "earliest_proof": {
+            "derived": "t_y >= 0",
+            "total_weight": 0,
+            "steps": [
+              {
+                "from": "y",
+                "to": "@zero",
+                "weight": 0,
+                "meaning": "t_@zero - t_y <= 0",
+                "evidence": "a3",
+                "source": "mes",
+                "kind": "abs_lo"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "queries": [
+    {
+      "work_order": "WO-1",
+      "a": "x",
+      "b": "y",
+      "relations": {
+        "A<B": {
+          "possible": true,
+          "assignment": {
+            "s": 1000,
+            "x": 1050,
+            "y": 1051
+          }
+        },
+        "A=B": {
+          "possible": true,
+          "assignment": {
+            "s": 1000,
+            "x": 1050,
+            "y": 1050
+          }
+        },
+        "A>B": {
+          "possible": true,
+          "assignment": {
+            "s": 1000,
+            "x": 1050,
+            "y": 1049
+          }
+        }
+      }
+    }
+  ]
+}
