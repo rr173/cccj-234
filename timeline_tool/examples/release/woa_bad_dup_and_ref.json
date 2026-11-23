@@ -1,0 +1,16 @@
+{
+  "comment": "非法批次 B（应被拒）：calibration 在一批内有撤销+登记两个操作（一项一批至多一个操作）。结构校验先命中即收集出错项并整批拒绝，本批不写任何内容；同批中 S-BADREF 的引用因此也不会生效（拒绝按本批结束态判断，与行序无关）。",
+  "work_order": "WO-A",
+  "batch_seq": 26,
+  "operations": [
+    {"action": "revoke", "item": "calibration", "credential_id": "C-1"},
+    {"action": "register", "item": "calibration",
+     "credential_id": "C-2", "result": "pass", "refs": []},
+    {"action": "register", "item": "release_signoff",
+     "credential_id": "S-BADREF", "result": "pass",
+     "refs": [
+       {"item": "machine_measure", "credential_id": "M-2"},
+       {"item": "calibration", "credential_id": "C-1"}
+     ]}
+  ]
+}

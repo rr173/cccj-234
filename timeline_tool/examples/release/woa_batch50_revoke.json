@@ -1,0 +1,8 @@
+{
+  "comment": "批次 50：撤销包装核对 P-1（它仍是该项最后登记且未撤销的凭证，即使撤销目标本身有效也合法）。撤销不复活更早凭证，pack_check 变为 revoked，必需项缺失 => 再次不可放行；撤销记录可在 last_revocation 看到。",
+  "work_order": "WO-A",
+  "batch_seq": 50,
+  "operations": [
+    {"action": "revoke", "item": "pack_check", "credential_id": "P-1"}
+  ]
+}

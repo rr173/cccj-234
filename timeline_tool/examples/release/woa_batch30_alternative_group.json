@@ -1,0 +1,9 @@
+{
+  "comment": "批次 30：实验室复检 L-1 通过（签核的第 1 组替代前置）。但 S-MAIN 当时引用的是第 0 组（M-1/C-1），已失效的引用不会被自动改写，旧签核仍 invalid；本批只登记新前置，不登记新签核，仍不可放行。",
+  "work_order": "WO-A",
+  "batch_seq": 30,
+  "operations": [
+    {"action": "register", "item": "lab_retest",
+     "credential_id": "L-1", "result": "pass", "refs": []}
+  ]
+}

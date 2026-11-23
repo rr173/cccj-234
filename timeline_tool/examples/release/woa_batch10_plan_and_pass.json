@@ -1,0 +1,37 @@
+{
+  "comment": "批次 10（首批，含固定计划）：机台测量、校核独立通过；放行签核 S-MAIN 采用第 0 组前置 [机台测量, 校核]。全部必需项有效通过 => 可放行。",
+  "work_order": "WO-A",
+  "batch_seq": 10,
+  "plan": {
+    "items": [
+      {"item": "machine_measure", "event": "e_cross",
+       "prereq_groups": []},
+      {"item": "calibration", "event": "e_before",
+       "prereq_groups": []},
+      {"item": "lab_retest", "event": "e_after",
+       "prereq_groups": []},
+      {"item": "release_signoff", "event": "e_noshift",
+       "prereq_groups": [
+         ["machine_measure", "calibration"],
+         ["lab_retest"]
+       ]},
+      {"item": "pack_check", "event": "e_noanchor",
+       "prereq_groups": []}
+    ],
+    "required": ["release_signoff", "pack_check"]
+  },
+  "operations": [
+    {"action": "register", "item": "machine_measure",
+     "credential_id": "M-1", "result": "pass", "refs": []},
+    {"action": "register", "item": "calibration",
+     "credential_id": "C-1", "result": "pass", "refs": []},
+    {"action": "register", "item": "pack_check",
+     "credential_id": "P-1", "result": "pass", "refs": []},
+    {"action": "register", "item": "release_signoff",
+     "credential_id": "S-MAIN", "result": "pass",
+     "refs": [
+       {"item": "machine_measure", "credential_id": "M-1"},
+       {"item": "calibration", "credential_id": "C-1"}
+     ]}
+  ]
+}

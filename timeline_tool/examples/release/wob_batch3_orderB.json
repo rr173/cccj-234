@@ -1,0 +1,20 @@
+{
+  "comment": "WO-B 同批前置排列核对（重排版，仅核对用，不入演示库）：与 wob_batch3_orderA 是同一批操作、仅行序对调，入账后的批次结束快照必须完全一致。",
+  "work_order": "WO-B",
+  "batch_seq": 3,
+  "plan": {
+    "items": [
+      {"item": "b_base", "event": "e_conflict", "prereq_groups": []},
+      {"item": "b_final", "event": "e_tie",
+       "prereq_groups": [["b_base"]]}
+    ],
+    "required": ["b_base", "b_final"]
+  },
+  "operations": [
+    {"action": "register", "item": "b_base",
+     "credential_id": "BB-1", "result": "pass", "refs": []},
+    {"action": "register", "item": "b_final",
+     "credential_id": "BF-1", "result": "pass",
+     "refs": [{"item": "b_base", "credential_id": "BB-1"}]}
+  ]
+}

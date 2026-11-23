@@ -1,0 +1,10 @@
+{
+  "comment": "非法批次 D（应被拒）：签核的前置组合 [machine_measure] 不匹配计划中任一组（计划要求 [machine_measure, calibration] 或 [lab_retest]），且同组缺项。整批不写任何内容。",
+  "work_order": "WO-A",
+  "batch_seq": 28,
+  "operations": [
+    {"action": "register", "item": "release_signoff",
+     "credential_id": "S-WRONGGROUP", "result": "pass",
+     "refs": [{"item": "machine_measure", "credential_id": "M-2"}]}
+  ]
+}

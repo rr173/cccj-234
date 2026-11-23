@@ -1,0 +1,12 @@
+{
+  "comment": "批次 40：重新签核 S-RESIGN，显式采用第 1 组前置（实验室复检 L-1）。恢复有效性必须登记新签核：S-MAIN 保持 invalid 不动，S-RESIGN 有效且通过 => 恢复可放行。",
+  "work_order": "WO-A",
+  "batch_seq": 40,
+  "operations": [
+    {"action": "register", "item": "release_signoff",
+     "credential_id": "S-RESIGN", "result": "pass",
+     "refs": [
+       {"item": "lab_retest", "credential_id": "L-1"}
+     ]}
+  ]
+}

@@ -429,6 +429,13 @@ def main(argv=None):
     recall_tool.add_arguments(r)
     r.set_defaults(_func=recall_tool.cmd)
 
+    # 放行账册：本地 SQLite 入账 / 查账，见 release_ledger.py。
+    import release_ledger
+    rl = sub.add_parser(
+        "release", help="质检放行账册（本地 SQLite 入账/查账）")
+    release_ledger.add_arguments(rl)
+    rl.set_defaults(_func=None)  # 二级子命令各自带 _func
+
     args = ap.parse_args(argv)
     if getattr(args, "_func", None) is not None:
         return args._func(args)

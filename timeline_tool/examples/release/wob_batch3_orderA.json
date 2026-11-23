@@ -1,0 +1,20 @@
+{
+  "comment": "WO-B 合法首批（顺序版）：b_final 引用同批登记的 b_base；输入里 b_final 排在 b_base 前面，同批前置可引用，排列不影响结果。",
+  "work_order": "WO-B",
+  "batch_seq": 3,
+  "plan": {
+    "items": [
+      {"item": "b_base", "event": "e_conflict", "prereq_groups": []},
+      {"item": "b_final", "event": "e_tie",
+       "prereq_groups": [["b_base"]]}
+    ],
+    "required": ["b_base", "b_final"]
+  },
+  "operations": [
+    {"action": "register", "item": "b_final",
+     "credential_id": "BF-1", "result": "pass",
+     "refs": [{"item": "b_base", "credential_id": "BB-1"}]},
+    {"action": "register", "item": "b_base",
+     "credential_id": "BB-1", "result": "pass", "refs": []}
+  ]
+}

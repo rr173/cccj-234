@@ -1,0 +1,17 @@
+{
+  "comment": "非法计划（应被拒，且本批不写任何内容）：前置关系 a->b->a 成环；必需项含计划外的 ghost；绑定的事件 e_ghost 不在归属库 events 表。",
+  "work_order": "WO-B",
+  "batch_seq": 1,
+  "plan": {
+    "items": [
+      {"item": "a", "event": "e_tie", "prereq_groups": [["b"]]},
+      {"item": "b", "event": "e_seq", "prereq_groups": [["a"]]},
+      {"item": "c", "event": "e_ghost", "prereq_groups": []}
+    ],
+    "required": ["a", "ghost"]
+  },
+  "operations": [
+    {"action": "register", "item": "c",
+     "credential_id": "X-1", "result": "pass", "refs": []}
+  ]
+}

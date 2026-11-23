@@ -1,0 +1,9 @@
+{
+  "comment": "批次 20：机台测量换发一份不通过凭证 M-2。旧 M-1 被取代（superseded），引用 M-1 的签核 S-MAIN 立即失效——即使另一组前置（实验室复检）之后通过，也不能替旧签核背书。必需项失效 => 不可放行。",
+  "work_order": "WO-A",
+  "batch_seq": 20,
+  "operations": [
+    {"action": "register", "item": "machine_measure",
+     "credential_id": "M-2", "result": "fail", "refs": []}
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "comment": "非法批次 C（应被拒）：凭证 ID S-MAIN 在工单内复用。整批不写任何内容。",
+  "work_order": "WO-A",
+  "batch_seq": 27,
+  "operations": [
+    {"action": "register", "item": "pack_check",
+     "credential_id": "S-MAIN", "result": "pass", "refs": []}
+  ]
+}

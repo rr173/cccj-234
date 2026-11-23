@@ -1,0 +1,1 @@
+{"status": "rejected", "errors": [{"code": "rejected_batch", "message": "batch rejected with 1 problem(s)", "work_order": "WO-A", "batch_seq": 25, "errors": [{"code": "stale_revoke", "message": "revoke of 'M-1' is stale: the last registered non-revoked credential of item 'machine_measure' is 'M-2'", "work_order": "WO-A", "batch_seq": 25, "item": "machine_measure"}]}]}

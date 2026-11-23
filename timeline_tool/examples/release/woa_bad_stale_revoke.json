@@ -1,0 +1,8 @@
+{
+  "comment": "非法批次 A（批次 25，应被拒）：撤销指向 M-1，但批次 20 后机台测量最后登记且未撤销的凭证已是 M-2 —— 过期撤销。整批不写任何内容。",
+  "work_order": "WO-A",
+  "batch_seq": 25,
+  "operations": [
+    {"action": "revoke", "item": "machine_measure", "credential_id": "M-1"}
+  ]
+}
