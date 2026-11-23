@@ -421,7 +421,17 @@ def main(argv=None):
     pr.add_argument("input", help="输入规格 JSON（work_orders + queries）")
     pr.add_argument("-o", "--output", help="输出文件（缺省写到 stdout）")
     pr.add_argument("--compact", action="store_true", help="不缩进输出")
+
+    # 召回清单：只读现有班组归属 SQLite 库 + 仓库操作流水，见 recall_tool.py。
+    import recall_tool
+    r = sub.add_parser(
+        "recall", help="按质检事件 + 源箱原始区间生成召回清单（只读）")
+    recall_tool.add_arguments(r)
+    r.set_defaults(_func=recall_tool.cmd)
+
     args = ap.parse_args(argv)
+    if getattr(args, "_func", None) is not None:
+        return args._func(args)
 
     with open(args.input, "r", encoding="utf-8") as f:
         spec = json.load(f)

@@ -1,0 +1,10 @@
+{"seq": 10, "op": "inbound", "box": "B-IN", "warehouse": "W1", "count": 12}
+{"seq": 20, "op": "inbound", "box": "B-MIX", "warehouse": "W1", "count": 4}
+{"seq": 30, "op": "repack", "box": "B1", "warehouse": "W1", "takes": [{"box": "B-IN", "lo": 0, "hi": 6}, {"box": "B-MIX", "lo": 0, "hi": 2}]}
+{"seq": 40, "op": "repack", "box": "B2", "warehouse": "W1", "takes": [{"box": "B1", "lo": 1, "hi": 4}, {"box": "B1", "lo": 6, "hi": 8}]}
+{"seq": 50, "op": "repack", "box": "B3", "warehouse": "W1", "takes": [{"box": "B-IN", "lo": 6, "hi": 7}, {"box": "B-MIX", "lo": 3, "hi": 4}, {"box": "B-IN", "lo": 8, "hi": 9}]}
+{"seq": 60, "op": "ship", "box": "B1", "shipment": "S-A"}
+{"seq": 70, "op": "ship", "box": "B2", "shipment": "S-B"}
+{"seq": 80, "op": "ship", "box": "B-IN", "shipment": "S-C"}
+{"seq": 90, "op": "return", "box": "B2", "ship_seq": 70, "warehouse": "W2"}
+{"seq": 100, "op": "return", "box": "B-IN", "ship_seq": 80, "warehouse": "W3"}

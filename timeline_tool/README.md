@@ -382,3 +382,136 @@ python3 verify_attribution_full.py --fuzz 60 --seed 5    # 随机设备 + 随机
 - 随机生成小整数窗口的设备/班次/事件，逐毫秒枚举优先级并列、同班组并列、
   交接端点、空档与冲突；
 - 随机生成连续更正序列（add/replace/delete），每步后全表重算比对。
+
+---
+
+# 召回清单层（recall_tool.py / `timeline_tool.py recall`）
+
+质检员在仓库里定位到一条异常事件，并从现场确认原箱中需要召回的**连续区间**。
+原箱可能已被拆装：部分产品还在库（可能换过箱、退回过），部分已随别的箱出货。
+本层给出**现在**应扣住的库存位置和应联系的出货单，且**不能把同箱的正常产品算进去**。
+
+- 只读打开现有班组归属 SQLite 库，仅确认 `events` 表里 `(工单, 事件)` 存在；
+  **是否有时间锚、是否有设备归属都不影响召回**（`unlocatable`、无 binding 的事件同样可查）。
+- 仓库操作流水是 JSON Lines；结果带有所选事件、源区间、按当前箱 ID 与起点排序的明细。
+- 明细每一行是某个当前箱内**一段最大连续**的召回位置；`location_type` 为
+  `warehouse`（附 `warehouse`）或 `shipment`（附 `shipment` 与 `ship_seq`）。
+- 同一件产品只在其当前去向出现一次：换箱、多次退回不会重复计入。
+- 缺口或未命中位置隔开的两段**不合并**；箱在库但已被抽走的位置不是库存。
+
+## 流水格式（字段可自行命名，本实现支持的名称如下）
+
+每行一个 JSON 对象，`seq` 唯一正整数、按文件顺序严格递增（可跳号）。
+位置从 0 开始，区间一律半开 `[start, end)`。
+
+| 操作 | 必填字段 | 语义 |
+|---|---|---|
+| `inbound` | `box`, `warehouse`, `count` | 在新仓建箱，位置 `[0, count)`，`count` 正整数 |
+| `repack` | `box`, `warehouse`, `takes:[{box,lo,hi}]` | 从**同一仓**在库旧箱按 `takes` 顺序取区间，装入新箱自 0 连续编号；段内顺序不变；旧箱只失去被取区间，留下的位置不变；同一箱可多段但不可重叠、不可取已拆走位置 |
+| `ship` | `box`, `shipment` | 把一个非空在库箱的全部剩余产品交给出货单，不重编号；同一箱同时只能有一次未退回出货 |
+| `return` | `box`, `ship_seq`, `warehouse` | 按出货记录 `seq` 退回；必须正是该箱当前尚未退回的那次出货；整箱进指定仓，保留出货时剩余位置，之后可再换箱/出货 |
+
+本实现接受的别名：`op`/`type`/`action`，`box`/`box_id`，`warehouse`/`warehouse_id`/`wh`，
+`count`/`quantity`/`pieces`，`takes`/`sources`/`from`，take 内 `lo`/`start`、`hi`/`end`，
+`shipment`/`shipment_id`/`order`，`ship_seq`/`shipment_seq`。同一字段的多个别名值不同即拒绝。
+箱/仓/出货单 ID 可写字符串或整数（`7` 与 `"7"` 视为不同 ID）；`--source-box`
+是文本参数，纯整数的写法会再去匹配整数 ID。
+
+## 命令与可复跑示例
+
+```bash
+cd timeline_tool
+# 1) 建一个演示库（也可用已有任意班组归属库；这里只借 events 表）
+python3 attribution_tool.py build --db /tmp/recall_demo.db --force \
+    --timeline examples/attribution/timeline.json \
+    --manifest examples/attribution/manifest.json \
+    --shifts   examples/attribution/shifts.json
+
+# 2) 选中事件 WO-A/e_cross，源箱 B-IN 的原始位置 [1, 10)
+python3 timeline_tool.py recall --db /tmp/recall_demo.db \
+    --work-order WO-A --event e_cross \
+    --log examples/recall/warehouse.jsonl \
+    --source-box B-IN --source-start 1 --source-end 10
+# 等价入口：python3 recall_tool.py 后接同样参数
+
+# 3) 结果写入文件（已提交 out/recall_example.out.json）
+python3 timeline_tool.py recall --db /tmp/recall_demo.db \
+    --work-order WO-A --event e_cross \
+    --log examples/recall/warehouse.jsonl \
+    --source-box B-IN --source-start 1 --source-end 10 \
+    -o out/recall_example.out.json --compact
+
+# 4) 反例：同一条流水末尾重复使用已退回的出货 seq 70 → 非零退出、列出 line/seq
+python3 timeline_tool.py recall --db /tmp/recall_demo.db \
+    --work-order WO-A --event e_cross \
+    --log examples/recall/warehouse_bad_double_return.jsonl \
+    --source-box B-IN --source-start 1 --source-end 10
+# {"status":"rejected","errors":[{"code":"shipment_already_returned",
+#   "message":"ship seq 70 was already returned by seq 90 ...","line":11,"seq":110}]}
+```
+
+示例流水 `examples/recall/warehouse.jsonl`（`seq` 故意跳号）覆盖了：
+混装后再次拆箱（B1→B2）、原箱的剩余与退回（B-IN 退回 W3）、移入新箱后再出货
+（B1 在 S-A 上）、以及同箱但不在源区间的正常产品（B-MIX 的部分产品）。
+
+输出（节选）：
+
+```json
+{"status": "ok", "work_order": "WO-A", "event": "e_cross",
+ "source": {"box": "B-IN", "start": 1, "end": 10, "count": 9},
+ "rows": [
+   {"box": "B-IN", "start": 7, "end": 8, "count": 1,
+    "location_type": "warehouse", "warehouse": "W3",
+    "shipment": null, "ship_seq": null},
+   {"box": "B-IN", "start": 9, "end": 10, "count": 1, ...},
+   {"box": "B1", "start": 4, "end": 6, "count": 2,
+    "location_type": "shipment", "shipment": "S-A", "ship_seq": 60},
+   {"box": "B2", "start": 0, "end": 3, "count": 3, ...},
+   {"box": "B3", "start": 0, "end": 1, "count": 1, ...},
+   {"box": "B3", "start": 2, "end": 3, "count": 1, ...}],
+ "totals": {"rows": 6, "products": 9, "warehouse_products": 7,
+            "shipped_products": 2, "warehouse_boxes": 3, "shipped_boxes": 1}}
+```
+
+要点：
+
+- B-IN 的原始位置 0..5 已装进 B1，其中 1..4 又进了 B2；B1 位置 4..6 是源箱
+  0 位置的 4,5，现在在出货单 S-A 上 → 只报这一段，且带出货 `seq` 60。
+- B-IN 剩 6..7、8..9 被拆走 7..8 的缺口隔开 → 两行，均标 W3 库存。
+- B-MIX 的产品虽混入 B1，但不在源区间 → 不出现在清单里。
+
+## 校验与错误
+
+非法输入**整批拒绝**：非零退出、不输出部分清单，错误带 `line`（行号）和/或 `seq`：
+
+| code | 情形 |
+|---|---|
+| `seq_order` / `duplicate_seq` / `invalid_field` / `invalid_json` | 流水顺序、seq、字段类型问题 |
+| `unknown_box` / `unknown_source_box` / `box_id_reused` | 引用未知箱、源箱不在流水、箱 ID 复用 |
+| `take_overlap` / `take_gap` / `take_out_of_range` / `warehouse_mismatch` | 换箱取段重叠、取缺口/已拆走、越界、跨仓 |
+| `box_not_in_warehouse` / `empty_box_ship` | 从已出货箱取、空箱出货 |
+| `unknown_ship_seq` / `return_box_mismatch` / `shipment_already_returned` / `box_not_shipped` | 退回引用了不存在/别的箱/已结束的出货，或箱并不在出货中 |
+| `event_not_found` / `invalid_database` | `events` 表不存在或 `(工单, 事件)` 不存在 |
+| `empty_source_range` / `invalid_source_range` / `source_range_out_of_bounds` | 源区间为空、逆向、越界 |
+
+## 复杂度
+
+每个箱只保存“当前位置区间 → 出生位置区间”的分段映射；一条覆盖一万亿个连续位置
+的 `inbound` 只是一段。换箱只为实际取到的片段增加分段数，召回也只触碰与选中
+出生区间相交的片段。内存与时间随流水记录数和区间片段数增长，**不随件数增长**。
+
+```bash
+python3 verify_recall.py                      # 固定小流水 + 错误流水 + 随机模糊 + 大件数
+python3 verify_recall.py --fuzz 300 --seed 13
+# stats: {"fixed_rows": 6, "fuzz_cases": 1231, "huge_seconds": 0.048}
+# ALL RECALL CHECKS PASSED
+```
+
+`verify_recall.py` **不复用** `recall_tool` 的分段结构：对小流水逐件把每件产品当
+token 重放，与工具输出逐行比对；错误流水要求被拒且带行号/seq；随机小流水校验
+守恒（每件选中产品恰好出现一次）；大件数用 `10^12` 件验证耗时与片段数不随件数增长。
+
+`timeline_tool.py run`、`verify_enum.py`、`attribution_tool.py` 及原有 SQLite
+库均保持可用。`recall` 只读访问数据库：优先 `mode=ro`，目录不可写或无 `-shm`
+时退到 `mode=ro&immutable=1`，最后才用普通连接 + `PRAGMA query_only=ON`；三种
+方式都不写库（核对脚本在只读文件 + 只读目录下复跑并比对内容哈希）。
